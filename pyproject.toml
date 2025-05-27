@@ -1,0 +1,22 @@
+[project]
+name = "ngit-cli"
+version = "0.1.0"
+description = "A simple CLI tool to run custom commands"
+authors = [{ name = "A F M Mohimenul Joaa", email = "mohimenul.joaa@gmail.com" }]
+license = {text = "GNU"}
+readme = "readme.md"
+requires-python = ">=3.6"
+dependencies = ["click"]
+
+[project.scripts]
+ngit = "ngit:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[project.urls]
+"Homepage" = "https://github.com/afmjoaa/ngit-cli"

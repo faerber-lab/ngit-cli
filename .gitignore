@@ -1,0 +1,8 @@
+*.pyc
+__pycache__/
+*.pkl
+dist/
+build/
+build/
+src/ngit_cli.egg-info
+.idea/
