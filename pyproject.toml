@@ -6,10 +6,11 @@ authors = [{ name = "A F M Mohimenul Joaa", email = "mohimenul.joaa@gmail.com" }
 license = {text = "GNU"}
 readme = "readme.md"
 requires-python = ">=3.6"
-dependencies = ["click"]
+dependencies = ["click", "prompt_toolkit"]
 
 [project.scripts]
-ngit = "ngit:main"
+ngit = "ngit:ngit"
+mgit = "ngit:mgit"
 
 [build-system]
 requires = ["setuptools>=61.0"]

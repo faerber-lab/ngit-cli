@@ -1,3 +1,3 @@
-from .ngit import main
+from .nl import main
 
 __all__ = ["main"]

@@ -41,3 +41,14 @@ After installation, you can use `ngit-cli` using natural english to use git and 
 
 1. [git](https://git-scm.com/downloads)
 2. [GitHub CLI](https://cli.github.com/manual/gh)
+
+
+To install the package just run following from root directory
+`pip install .`
+
+final build:
+https://medium.com/@ebimsv/building-python-packages-07fbfbb959a9
+
+pip install twine build
+python -m build
+twine upload dist/*
