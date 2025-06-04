@@ -1,12 +1,12 @@
 [project]
 name = "ngit-cli"
-version = "0.1.0"
+version = "0.0.1"
 description = "A simple CLI tool to run custom commands"
 authors = [{ name = "A F M Mohimenul Joaa", email = "mohimenul.joaa@gmail.com" }]
 license = {text = "GNU"}
 readme = "readme.md"
 requires-python = ">=3.6"
-dependencies = ["click", "prompt_toolkit"]
+dependencies = ["torch~=2.7.0", "click~=8.1.8", "prompt_toolkit~=3.0.51", "yaspin~=3.1.0"]
 
 [project.scripts]
 ngit = "ngit:ngit"
@@ -20,4 +20,4 @@ build-backend = "setuptools.build_meta"
 package-dir = {"" = "src"}
 
 [project.urls]
-"Homepage" = "https://github.com/afmjoaa/ngit-cli"
+"Homepage" = "https://github.com/faerber-lab/ngit-cli"

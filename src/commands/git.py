@@ -22,142 +22,148 @@ def git(ctx):
         click.echo(f"I am about to invoke {ctx.invoked_subcommand}")
 
 
-@git.command()
+@git.command("config_username")
 @click.argument("username")
-@click.argument("email")
-def config_user(username, email):
-    """Configure Git global username and email"""
+def git_config_username(username):
+    """Configure Git global username"""
     _run_git_command(["git", "config", "--global", "user.name", username], capture_output=False)
+    click.echo(f"✅ Git user configured as {username}")
+
+
+@git.command("config_email")
+@click.argument("email")
+def git_config_email(email):
+    """Configure Git global email"""
     _run_git_command(["git", "config", "--global", "user.email", email], capture_output=False)
-    click.echo(f"✅ Git user configured as {username} <{email}>")
+    click.echo(f"✅ Git user email configured as {email}")
 
 
-@git.command()
+@git.command("commit")
 @click.argument("message")
-def commit(message):
+def git_commit(message):
     """Commit with a message"""
     click.echo("🔧 Committing changes...")
     _run_git_command(["git", "commit", "-m", message])
 
 
-@git.command()
+@git.command("checkout")
 @click.argument("branch_name")
-def checkout(branch_name):
+def git_checkout(branch_name):
     """Checkout to a branch"""
     click.echo(f"🔀 Switching to branch '{branch_name}'...")
     _run_git_command(["git", "checkout", branch_name])
 
 
-@git.command()
+@git.command("create_branch")
 @click.argument("branch_name")
-def create_branch(branch_name):
+def git_create_branch(branch_name):
     """Create a new branch"""
     _run_git_command(["git", "branch", branch_name], capture_output=False)
     click.echo(f"🌿 Branch '{branch_name}' created")
 
 
-@git.command()
+@git.command("delete_branch")
 @click.argument("branch_name")
-def delete_branch(branch_name):
+def git_delete_branch(branch_name):
     """Delete a branch"""
     _run_git_command(["git", "branch", "-d", branch_name], capture_output=False)
     click.echo(f"❌ Branch '{branch_name}' deleted")
 
 
-@git.command()
+@git.command("rename_branch")
 @click.argument("old_name")
 @click.argument("new_name")
-def rename_branch(old_name, new_name):
+def git_rename_branch(old_name, new_name):
     """Rename a branch"""
     _run_git_command(["git", "branch", "-m", old_name, new_name], capture_output=False)
     click.echo(f"🔁 Branch renamed from '{old_name}' to '{new_name}'")
 
 
-@git.command()
-def status():
+@git.command("status")
+def git_status():
     """Show git status"""
     click.echo("📦 Git status:")
     _run_git_command(["git", "status"])
 
 
-@git.command()
+@git.command("reset_last_commit")
 @click.option("--mode", default="soft", type=click.Choice(["soft", "mixed", "hard"]), help="Reset mode")
-def reset_last_commit(mode):
+def git_reset_last_commit(mode):
     """Remove the last commit (soft/mixed/hard)"""
     _run_git_command(["git", "reset", f"--{mode}", "HEAD~1"], capture_output=False)
     click.echo(f"⚠️ Last commit removed with {mode} reset")
 
 
-@git.command()
+@git.command("add_remote")
 @click.argument("name")
 @click.argument("url")
-def add_remote(name, url):
+def git_add_remote(name, url):
     """Add a new remote"""
     _run_git_command(["git", "remote", "add", name, url], capture_output=False)
     click.echo(f"🔗 Remote '{name}' added with URL {url}")
 
 
-@git.command()
+@git.command("remove_remote")
 @click.argument("name")
-def remove_remote(name):
+def git_remove_remote(name):
     """Remove a remote"""
     _run_git_command(["git", "remote", "remove", name], capture_output=False)
     click.echo(f"🔌 Remote '{name}' removed")
 
 
-@git.command()
-def list_remotes():
+@git.command("list_remotes")
+def git_list_remotes():
     """List all remotes"""
     click.echo("🌐 Git remotes:")
     _run_git_command(["git", "remote", "-v"])
 
 
-@git.command()
+@git.command("add")
 @click.argument("files", nargs=-1)
-def add(files):
+def git_add(files):
     """Add files to staging"""
     _run_git_command(["git", "add"] + list(files), capture_output=False)
     click.echo(f"📥 Staged: {', '.join(files)}")
 
 
-@git.command()
+@git.command("unstage")
 @click.argument("files", nargs=-1)
-def unstage(files):
+def git_unstage(files):
     """Remove files from staging"""
     _run_git_command(["git", "reset"] + list(files), capture_output=False)
     click.echo(f"📤 Unstaged: {', '.join(files)}")
 
 
-@git.command()
+@git.command("pull")
 @click.option("--remote", default="origin", help="Remote name")
 @click.option("--branch", default="main", help="Branch name")
-def pull(remote, branch):
+def git_pull(remote, branch):
     """Pull changes from remote"""
     click.echo(f"⬇️ Pulling from {remote}/{branch}...")
     _run_git_command(["git", "pull", remote, branch])
 
 
-@git.command()
+@git.command("push")
 @click.option("--remote", default="origin", help="Remote name")
 @click.option("--branch", default="main", help="Branch name")
-def push(remote, branch):
+def git_push(remote, branch):
     """Push changes to remote"""
     click.echo(f"⬆️ Pushing to {remote}/{branch}...")
     _run_git_command(["git", "push", remote, branch])
 
 
-@git.command()
+@git.command("init")
 @click.argument("directory", default=".")
-def init(directory):
+def git_init(directory):
     """Initialize a new git repo"""
     _run_git_command(["git", "init", directory], capture_output=False)
     click.echo(f"📁 Git repo initialized in {os.path.abspath(directory)}")
 
 
-@git.command()
+@git.command("clone")
 @click.argument("url")
 @click.argument("directory", required=False)
-def clone(url, directory):
+def git_clone(url, directory):
     """Clone a git repo"""
     args = ["git", "clone", url] + ([directory] if directory else [])
     _run_git_command(args)

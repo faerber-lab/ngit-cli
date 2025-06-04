@@ -1,3 +1,3 @@
-from .nl import main
+from .ngit import ngit, mgit
 
-__all__ = ["main"]
+__all__ = ["ngit", "mgit"]

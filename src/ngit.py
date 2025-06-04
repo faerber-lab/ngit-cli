@@ -1,15 +1,16 @@
 import click
-import subprocess
+from translator.offline_translator import translate
+from executor import execute_function
 from util import prefill_input
 from commands.git import git
+import warnings
+from transformers.utils import logging
+from yaspin import yaspin
 
 
-# Define your command mappings here
-COMMAND_MAP = {
-    "init": "git init",
-    "status": "git status",
-    "do something": "echo You triggered a custom command",
-}
+# Suppress warnings
+warnings.filterwarnings("ignore")
+logging.set_verbosity_error()
 
 
 @click.command()
@@ -20,27 +21,29 @@ def ngit(execute, command):
     by default, it will just translate
     use '-e' for execution
     """
+    spinner = yaspin()
+    spinner.start()
+
     user_input = ' '.join(command)
-    click.echo(f"Current task is: {user_input}")
-    click.echo(f'Execute {execute} is passed')
+    generated_response = translate(user_input)
 
-    # Map to real command if exists
-    shell_command = COMMAND_MAP.get(user_input, user_input)
+    spinner.stop()
+    if execute:
+        click.echo(f"\n🔧 Executing: {click.style(generated_response, fg='cyan')}")
+        # Execute the generated response
+        execute_function(generated_response)
+    else:
+        click.echo(f"\n🔧 Translation: {click.style(generated_response, fg='cyan')}")
+        edited_response = prefill_input(">> ", generated_response)
+        # Execute the edited response
 
-    click.echo(click.style(f"\n🔧 Executing: {shell_command}", fg="cyan"))
 
-    try:
-        result = subprocess.run(shell_command, shell=True, check=True, text=True,
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if result.stdout:
-            click.secho(result.stdout.strip(), fg="green")
-        if result.stderr:
-            click.secho(result.stderr.strip(), fg="yellow")
-        response = prefill_input(">>> ", shell_command)
-        print(response)
-    except subprocess.CalledProcessError as e:
-        click.secho("❌ Command failed:", fg="red")
-        click.secho(e.stderr.strip(), fg="red")
+
+    # TODO all debug statements
+    # click.echo(f"Current task is: {user_input}")
+    # click.echo(f"Generated response is: {generated_response}")
+    # click.echo(f'Execute {execute} is passed')
+    # click.echo(f'Edited response is: {edited_response}')
 
 
 @click.group()
