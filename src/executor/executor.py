@@ -1,5 +1,5 @@
 import json
-
+from click.testing import CliRunner
 from commands.git import (git_config_username, git_config_email, git_commit,
                               git_checkout, git_create_branch, git_delete_branch,
                               git_rename_branch, git_status, git_reset_last_commit,
@@ -35,8 +35,8 @@ def execute_function(command: str):
         func_name = cmd['name']
         args = cmd['arguments']
         func = function_map.get(func_name)
-        if func:
-            func(**args)
+        runner = CliRunner()
+        result = runner.invoke(func, list(args.values()))
 
 
 def get_real_command(command: str) -> str:

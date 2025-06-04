@@ -1,6 +1,8 @@
+import subprocess
+
 import click
 from translator.offline_translator import translate
-from executor import execute_function
+from executor import execute_function, get_real_command
 from util import prefill_input
 from commands.git import git
 import warnings
@@ -26,18 +28,24 @@ def ngit(execute, command):
 
     user_input = ' '.join(command)
     generated_response = translate(user_input)
-
+    real_command = get_real_command(generated_response)
+    edited_response = real_command
     spinner.stop()
     if execute:
         click.echo(f"\n🔧 Executing: {click.style(generated_response, fg='cyan')}")
-        # Execute the generated response
-        execute_function(generated_response)
+
     else:
         click.echo(f"\n🔧 Translation: {click.style(generated_response, fg='cyan')}")
-        edited_response = prefill_input(">> ", generated_response)
-        # Execute the edited response
+        # Get the edited response
+        edited_response = prefill_input(">> ", real_command)
 
-
+    result = subprocess.run(edited_response, shell=True, capture_output=True)
+    out = result.stdout.strip()
+    err = result.stderr.strip()
+    if out:
+        click.echo(f">>  ✅ {click.style(out.decode(), fg='green')}")
+    elif err:
+        click.echo(f">>  ❌ {click.style(err.decode(), fg='red')}")
 
     # TODO all debug statements
     # click.echo(f"Current task is: {user_input}")
